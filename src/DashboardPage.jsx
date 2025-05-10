@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function DashboardPage() {
-  const navigate = useNavigate();
+export default function DashboardPage() {
   const [profile, setProfile] = useState(null);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [updatedEmail, setUpdatedEmail] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -16,21 +16,21 @@ function DashboardPage() {
 
     fetch("http://localhost:8080/api/user/me", {
       headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        Authorization: `Bearer ${token}`
+      }
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Profile fetch failed");
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch profile");
         return res.json();
       })
-      .then((data) => {
+      .then(data => {
         console.log("Profile data:", data);
         setProfile(data);
         setUpdatedEmail(data.username);
       })
-      .catch((err) => {
+      .catch(err => {
         console.error("Error getting profile:", err);
-        alert("Error getting profile. Please log in again.");
+        alert("Session expired. Please log in again.");
         localStorage.removeItem("token");
         navigate("/login");
       });
@@ -41,34 +41,35 @@ function DashboardPage() {
     navigate("/login");
   };
 
-  const handleSubmitUpdate = (e) => {
-    e.preventDefault();
+  const handleSubmitUpdate = () => {
     const token = localStorage.getItem("token");
 
     fetch("http://localhost:8080/api/user/update", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ email: updatedEmail }),
+      body: JSON.stringify({ email: updatedEmail })
     })
-      .then((res) => {
-        if (!res.ok) throw new Error("Update failed");
-        if (res.status === 204) {
+      .then(res => {
+if (res.status === 204 || res.status === 200) {
           alert("Email updated. Please log in again.");
           localStorage.removeItem("token");
           window.location.href = "/login";
-          return {};
+          return null;
         }
+        if (!res.ok) throw new Error("Update failed");
         return res.json();
       })
-      .then((data) => {
-        alert("Profile updated successfully!");
-        setProfile((prev) => ({ ...prev, username: updatedEmail }));
-        setShowUpdateForm(false);
+      .then(data => {
+        if (data) {
+          alert("Profile updated successfully!");
+          setProfile(prev => ({ ...prev, username: updatedEmail }));
+          setShowUpdateForm(false);
+        }
       })
-      .catch((err) => {
+      .catch(err => {
         console.error("Update error:", err);
         alert("Error updating profile.");
       });
@@ -77,39 +78,38 @@ function DashboardPage() {
   if (!profile) return <div>Loading profile...</div>;
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div style={{ textAlign: "center", marginTop: "40px" }}>
       <h1>Dashboard</h1>
       <p>Welcome, {profile.username}!</p>
       <p>Email: {profile.username}</p>
-      <p>Roles: {profile.authorities?.map((a) => a.authority).join(", ") || "No roles assigned"}</p>
-      <button onClick={() => setShowUpdateForm(true)}>Update Profile</button>
-      <button onClick={() => alert("Change password clicked")}>Change Password</button>
-      <br />
+      <p>
+        Roles: {profile.authorities && profile.authorities.length > 0
+          ? profile.authorities.map(a => a.authority).join(", ")
+          : "No roles assigned"}
+      </p>
+      <div>
+        <button onClick={() => setShowUpdateForm(true)}>Update Profile</button>{" "}
+        <button onClick={() => alert("Change password coming soon")}>Change Password</button>
+      </div>
       <br />
       <button onClick={handleLogout}>Logout</button>
 
       {showUpdateForm && (
-        <div style={{ marginTop: "20px" }}>
-          <h3>Update Email</h3>
-          <form onSubmit={handleSubmitUpdate}>
-            <input
-              type="email"
-              value={updatedEmail}
-              onChange={(e) => setUpdatedEmail(e.target.value)}
-              required
-              style={{ padding: "10px", margin: "10px", width: "200px" }}
-            />
-            <br />
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={() => setShowUpdateForm(false)} style={{ marginLeft: "10px" }}>
-              Cancel
-            </button>
-          </form>
+        <div style={{ marginTop: "30px" }}>
+          <h2>Update Email</h2>
+          <input
+            type="email"
+            value={updatedEmail}
+            onChange={e => setUpdatedEmail(e.target.value)}
+            placeholder="New email"
+            style={{ padding: "10px", marginBottom: "10px", width: "250px" }}
+          />
+          <br />
+          <button onClick={handleSubmitUpdate}>Save Changes</button>{" "}
+          <button onClick={() => setShowUpdateForm(false)}>Cancel</button>
         </div>
       )}
     </div>
   );
 }
-
-export default DashboardPage;
 
