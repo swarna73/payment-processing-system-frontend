@@ -6,9 +6,6 @@ export default function DashboardPage() {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [updatedEmail, setUpdatedEmail] = useState("");
   const navigate = useNavigate();
-const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
-const [currentPassword, setCurrentPassword] = useState("");
-const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -118,7 +115,7 @@ const handleChangePassword = () => {
       </p>
       <div>
         <button onClick={() => setShowUpdateForm(true)}>Update Profile</button>{" "}
-        <button onClick={() => setShowChangePasswordForm(true)}>Change Password</button>
+        <button onClick={() => alert("Change password coming soon")}>Change Password</button>
       </div>
       <br />
       <button onClick={handleLogout}>Logout</button>
