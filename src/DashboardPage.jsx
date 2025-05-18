@@ -9,6 +9,7 @@ export default function DashboardPage() {
 const [showChangePasswordForm, setShowChangePasswordForm] = useState(false);
 const [currentPassword, setCurrentPassword] = useState("");
 const [newPassword, setNewPassword] = useState("");
+const [auditLogs, setAuditLogs] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -43,6 +44,17 @@ const [newPassword, setNewPassword] = useState("");
     localStorage.removeItem("token");
     navigate("/login");
   };
+useEffect(() => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+fetch("http://localhost:8080/api/audit-logs", {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+    .then(res => res.json())
+    .then(data => setAuditLogs(data))
+    .catch(err => console.error("Failed to fetch audit logs", err));
+}, []);
 
   const handleSubmitUpdate = () => {
     const token = localStorage.getItem("token");
@@ -122,6 +134,14 @@ const handleChangePassword = () => {
       </div>
       <br />
       <button onClick={handleLogout}>Logout</button>
+<h3>🧾 Audit Log</h3>
+<ul>
+  {auditLogs.map((log, index) => (
+    <li key={index}>
+      {log.timestamp} — {log.action}
+    </li>
+  ))}
+</ul>
 
       {showUpdateForm && (
         <div style={{ marginTop: "30px" }}>
