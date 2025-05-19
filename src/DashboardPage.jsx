@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { format, parseISO } from "date-fns";
+
 
 export default function DashboardPage() {
   const [profile, setProfile] = useState(null);
@@ -134,14 +136,25 @@ const handleChangePassword = () => {
       </div>
       <br />
       <button onClick={handleLogout}>Logout</button>
-<h3>🧾 Audit Log</h3>
-<ul>
-  {auditLogs.map((log, index) => (
-    <li key={index}>
-      {log.timestamp} — {log.action}
-    </li>
-  ))}
-</ul>
+
+ <section>
+      <h2 className="text-xl font-bold flex items-center">
+        <img src="/receipt-icon.svg" alt="" className="w-6 h-6 mr-2"/>
+        Audit Log
+      </h2>
+      {auditLogs.length === 0 ? (
+        <p className="italic">No audit entries yet.</p>
+      ) : (
+        <ul className="mt-4 space-y-2">
+          {auditLogs.map((log) => (
+            <li key={log.id} className="flex justify-between">
+              <span>{format(parseISO(log.timestamp), "PPpp")}</span>
+              <span className="font-medium">— {log.action}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
 
       {showUpdateForm && (
         <div style={{ marginTop: "30px" }}>
