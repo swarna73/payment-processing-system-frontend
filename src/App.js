@@ -1,18 +1,25 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './LoginPage';
-import DashboardPage from './DashboardPage';
+// src/App.js
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+// Import pages from the correct folder under src/pages
+import Dashboard from './pages/DashboardPage';
+import Login from './pages/LoginPage';
 
-function App() {
+export default function App() {
+  const isLoggedIn = Boolean(localStorage.getItem('jwt'));
+
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        {/* ADD THIS default route to redirect to /login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </Router>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          isLoggedIn ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+        }
+      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      {/* Add other routes here as needed */}
+    </Routes>
   );
 }
 
-export default App;

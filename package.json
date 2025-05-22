@@ -1,24 +1,26 @@
 {
   "name": "paymentsystem-frontend",
   "version": "0.1.0",
+  "proxy": "http://localhost:8080",
   "private": true,
   "dependencies": {
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.6.3",
-    "@testing-library/react": "^16.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "date-fns": "^4.1.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router-dom": "^7.5.3",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "@stripe/react-stripe-js": "^2.4.0",
+    "@stripe/stripe-js": "^1.49.0",
+    "react": "^18.14.0",
+    "react-dom": "^18.14.0",
+    "react-router-dom": "^6.16.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.3",
+    "tailwindcss": "^4.1.7"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "tw:build": "tailwindcss -i ./src/index.css -o ./src/tailwind.output.css --watch"
   },
   "eslintConfig": {
     "extends": [
