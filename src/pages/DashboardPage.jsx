@@ -1,6 +1,7 @@
 // src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
 import PaymentForm from '../components/PaymentForm';
+import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
   const [user, setUser] = useState(null);
@@ -73,7 +74,7 @@ export default function DashboardPage() {
           {/* Create Payment */}
           <section className="bg-white p-6 rounded-lg shadow">
             <h2 className="text-2xl font-semibold mb-4">Create a Payment</h2>
-            <PaymentForm amount={10.5} currency="USD" onSuccess={handlePaymentSuccess} />
+ 		<PaymentForm onSuccess={handlePaymentSuccess} />
           </section>
 
           {/* Payments Table */}
@@ -93,7 +94,11 @@ export default function DashboardPage() {
                 </thead>
                 <tbody>
                   {payments.map(p => (
-                    <tr key={p.id} className="border-t">
+		        <tr
+			     key={p.id}
+			     className="border-t hover:bg-gray-50 cursor-pointer"
+			     onClick={() => navigate(`/payments/${p.id}`)}
+			   >
                       <td className="px-4 py-2">
                         {new Date(p.createdAt).toLocaleString()}
                       </td>

@@ -4,6 +4,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 // Import pages from the correct folder under src/pages
 import Dashboard from './pages/DashboardPage';
 import Login from './pages/LoginPage';
+import PaymentDetail from './pages/PaymentDetail';
+
 
 export default function App() {
   const isLoggedIn = Boolean(localStorage.getItem('jwt'));
