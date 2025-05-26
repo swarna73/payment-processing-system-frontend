@@ -20,9 +20,10 @@ export default function Login() {
       });
 
       if (!res.ok) {
-        const body = await res.text();
-        throw new Error(body || res.statusText);
+       const { error } = await res.json();
+       throw new Error(error || 'Login failed');
       }
+
 
       const { token } = await res.json();
       localStorage.setItem('jwt', token);

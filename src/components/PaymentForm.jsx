@@ -1,12 +1,14 @@
 // src/components/PaymentForm.jsx
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+
 import {
   Elements,
   CardElement,
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { api } from "../utils/api";
 
 const stripePromise = loadStripe(
   process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY
@@ -62,7 +64,7 @@ export default function PaymentForm({ onSuccess }) {
 
     try {
       const jwt = localStorage.getItem("jwt");
-      const res = await fetch("/api/payments", {
+      const res = await api("/api/payments", {
         method: "POST",
         headers: {
           "Content-Type":  "application/json",

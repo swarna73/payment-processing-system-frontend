@@ -19,7 +19,14 @@ export default function App() {
         }
       />
       <Route path="/login" element={<Login />} />
-      <Route path="/dashboard" element={<Dashboard />} />
+<Route
+  path="/dashboard"
+  element={
+    localStorage.getItem("jwt")
+      ? <Dashboard />
+      : <Navigate to="/login" replace />
+  }
+/>
       {/* Add other routes here as needed */}
     </Routes>
   );

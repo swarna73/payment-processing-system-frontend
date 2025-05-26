@@ -1,9 +1,11 @@
 // src/pages/DashboardPage.jsx
 import React, { useState, useEffect } from 'react';
-import PaymentForm from '../components/PaymentForm';
+import PaymentForm from "../components/PaymentForm";
+import { api } from "../utils/api"; 
 import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [payments, setPayments] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
@@ -13,7 +15,7 @@ export default function DashboardPage() {
     const headers = { Authorization: `Bearer ${jwt}` };
 
     // Load profile
-    fetch('/api/auth/me', { headers })
+      api("/api/auth/me")
       .then(r => r.ok ? r.json() : Promise.reject())
       .then(data => setUser(data))
       .catch(() => setUser(null));
